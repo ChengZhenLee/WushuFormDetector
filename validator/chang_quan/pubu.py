@@ -1,7 +1,6 @@
-import numpy as np
 import numpy.typing as npt
-from constants import constants
-import base_math
+import utils.constants as constants
+import validator.base_stance as base_stance
 
 
 def _validatePuBu(compressedHip: npt.ArrayLike, stretchedHip: npt.ArrayLike,
@@ -11,16 +10,14 @@ def _validatePuBu(compressedHip: npt.ArrayLike, stretchedHip: npt.ArrayLike,
         Internal master logic to validate a Chang Quan Pu Bu
     """
     # Check if the compressed leg is compressed
-    thighLength: float = base_math.calculateMagnitude(np.array(compressedHip) - np.array(compressedKnee))
-    hipAnkleLength: float = base_math.calculateMagnitude(np.array(compressedHip) - np.array(compressedAnkle))
-
-    compressed: bool = hipAnkleLength < (thighLength * constants.COMPRESSION_FACTOR)
+    compressed: bool = base_stance.isCompressed(compressedAnkle, compressedKnee, compressedHip,
+                                                constants.COMPRESSION_FACTOR)
 
     # Check if the stretched leg is straight
-    legStraight: bool = base_math.isStraight([stretchedHip, stretchedKnee, stretchedAnkle])
+    legStraight: bool = base_stance.isStraight([stretchedHip, stretchedKnee, stretchedAnkle])
 
     # Check if the stretched leg is level
-    legLevel: bool = base_math.isLevel(stretchedHip, stretchedAnkle)
+    legLevel: bool = base_stance.isLevel(stretchedHip, stretchedAnkle)
 
     return compressed and legStraight and legLevel
 

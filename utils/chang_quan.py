@@ -1,0 +1,3 @@
+# CHANG QUAN
+MAX_ANGLE: float = 95
+MIN_ANGLE: float = 85

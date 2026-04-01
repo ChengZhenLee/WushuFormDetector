@@ -1,7 +1,7 @@
 import numpy as np
 import numpy.typing as npt
-from constants import constants
-import base_math
+from utils import constants
+import validator.base_stance as base_stance
 
 
 def _checkCOG(neck: npt.ArrayLike, backAnkle: npt.ArrayLike) -> bool:
@@ -19,16 +19,15 @@ def _validateXuBu(neck: npt.ArrayLike,
         Internal master logic to validate a Chang Quan Xu Bu
     """
     # Check that the back thigh is level
-    backThighLevel: bool = base_math.isLevel(backHip, backKnee)
+    backThighLevel: bool = base_stance.isLevel(backHip, backKnee)
 
     # Center of gravity on the back leg
     centerOnBack: bool = _checkCOG(neck, backAnkle)
 
     # Front leg is extended
-    frontAngle: float = base_math.calculateAngle(frontHip, frontKnee, frontAnkle)
-    frontExtended: bool = frontAngle > 90
+    isExtended: bool = base_stance.isExtended(frontAnkle, frontKnee, frontHip, constants.MIN_EXTENDED_ANGLE)
 
-    return backThighLevel and centerOnBack and frontExtended
+    return backThighLevel and centerOnBack and isExtended
 
 
 def validateLeftXuBu(neck: npt.ArrayLike,

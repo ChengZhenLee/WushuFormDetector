@@ -1,5 +1,6 @@
 import numpy.typing as npt
-import base_math
+import utils.chang_quan as chang_quan
+import validator.base_stance as base_stance
 
 
 def _validateGongBu(frontHip: npt.ArrayLike, backHip: npt.ArrayLike,
@@ -9,14 +10,15 @@ def _validateGongBu(frontHip: npt.ArrayLike, backHip: npt.ArrayLike,
         Internal master logic to validate a Chang Quan Gong Bu
     """
     # Check if the front thigh is level
-    frontThighLevel: bool = base_math.isLevel(frontHip, frontKnee)
+    frontThighLevel: bool = base_stance.isLevel(frontHip, frontKnee)
 
     # Check if the front leg forms a right angle
-    frontAngle: float = base_math.calculateAngle(frontAnkle, frontKnee, frontHip)
-    isSquare: bool = base_math.checkAngle(frontAngle, 90)
+    isSquare = base_stance.isWithinAngleRange(
+            frontHip, frontKnee, frontHip,
+            chang_quan.MIN_ANGLE, chang_quan.MAX_ANGLE)
 
     # Check if the back leg is straight
-    backLegStraight: bool = base_math.isStraight([backHip, backKnee, backAnkle])
+    backLegStraight: bool = base_stance.isStraight([backHip, backKnee, backAnkle])
 
     return frontThighLevel and isSquare and backLegStraight
 
